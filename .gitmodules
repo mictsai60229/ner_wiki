@@ -1,0 +1,3 @@
+[submodule "collect_data/wikiextractor"]
+	path = collect_data/wikiextractor
+	url = https://github.com/attardi/wikiextractor.git
