@@ -56,7 +56,7 @@ def extract_first_paragraph(text):
     
     tags = "|".join(["{{", "}}", "\[\[", "]]"])
     
-    for match in re.finditer("(.*\n)*?\n", text):
+    for match in re.finditer("(.*\n)*?", text):
         
         value = match.group(0)
         stack = []
@@ -81,6 +81,27 @@ def extract_first_paragraph(text):
         if res:
             return res   
     return ""
+
+def extarct_last_paragraph(text):
+    
+    paragraphes = text.split("\n\n")
+    return paragraphes[-1]
+
+def search_category(paragraph):
+    
+    category_list = []
+    regex = "{{([^}]*)}}"
+    for line in paragraph.split("\n"):
+        
+        match = re.match(regex, line)
+        
+        if match:
+            category =  match.group(1)
+            category_list.extend([v.lower() for v in category.split("|")])
+            
+    return category_list
+            
+            
             
 def search_bold(text):
     
@@ -93,32 +114,33 @@ def search_bold(text):
     return res
 
 
-def extract_bold(filepath):
+def extract_bold(page):
     
-    page_ids = []
-    page_bolds = []
-    for page in pages_generator(filepath):
-        pages_ids.append(, page['title'])
         
-        first_paragraph = extract_first_paragraph(page['text'])
-        bold_data = search_bold(first_paragraph)
-            
-        page_bolds[page['id']] = 
-            
-        print(page["id"], page["title"], json.dumps(list(bold_data), ensure_ascii=False), sep="\t", file=f)
+    first_paragraph = extract_first_paragraph(page['text'])
+    last_paragraph = extarct_last_paragraph(page['text'])
     
-    return page_bolds ,page_ids
+    category = search_category(last_paragraph)
+    disambiguation = 'disambiguation' in category
+    bold_data = search_bold(first_paragraph)
+            
+    return [page["id"], page["title"], disambiguation, list(bold_data)]
+
 
 def extract_redirects(filepath):
     pass
 
 def extract_language_link(language="zh"):
     pass
+
+
+def anchor_file_generator(dirfile):
     
-def extract_anchor_frequency(datapath):
+    return (os.path.join(root, name) for root, dirs, files in os.walk(dirfile, topdown=False) for name in files)
+
+def extract_anchor_frequency(file):
     
-    tasks = (os.path.join(root, name) for root, dirs, files in os.walk(datapath, topdown=False) for name in files)
-    wiki_paragraphs = (json.loads(line) for file in tasks for line in open(file))
+    wiki_paragraphs = (json.loads(line) for line in open(file))
     
     
     anchor_count = defaultdict(Counter)
@@ -126,9 +148,7 @@ def extract_anchor_frequency(datapath):
     
     count = 0
     for wiki_paragraph in wiki_paragraphs:
-        
-        
-        
+
         content = wiki_paragraph ['text']
         used_title = set()
         for match in re.finditer(regex, content):
@@ -142,10 +162,10 @@ def extract_anchor_frequency(datapath):
             anchor_count[anchor][link] += 1
        
         count += 1
-        if count % 10000 == 0:
-            print("Preprocess {} wiki pages".format(count))
     
-    return anchor_count
+    return (anchor_count, count)
+
+
 
 def output_page_id(page_ids, filepath="enwiki-pageid.tsv"):
     
