@@ -8,12 +8,7 @@ DATA_DIR = os.path.join(BASE_DIR, "collect_data")
 class bold_table(object):
     
     def __init__(self):
-        self.load_bold()
         
-        
-    def load_bold(self, file="enwiki-latest-bold.tsv", headers=False):
-        
-        bold_file = os.path.join(DATA_DIR, file)
         self.id2title = {}
         self.title2id = {}
         
@@ -21,6 +16,14 @@ class bold_table(object):
         
         self.id2bold = {}
         self.bold2id = {}
+        
+        self.load_bold()
+        
+        
+    def load_bold(self, file="enwiki-latest-bold.tsv", headers=False):
+        
+        bold_file = os.path.join(DATA_DIR, file)
+        
         
         with open(bold_file, errors='replace') as csvfile:
             
@@ -33,10 +36,14 @@ class bold_table(object):
                 
                 wikiid, title, is_disambiguate, bold = row
                 
+                if ":" in title:
+                    continue
+                
                 wikiid = int(wikiid)
-                if is_disambiguate == "True":
+                if is_disambiguate == "True" or '(disambiguation)' in title:
                     self.disambiguate_pages.add(wikiid)
                 title = self._normalize_title(title)
+                
                 wikiid = int(wikiid)
                 
                 self.id2title[wikiid] = title
