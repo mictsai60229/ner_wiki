@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 from load_data import load_bold, load_redirect, load_anchor
 
-def disambiguate_NE(entity: str, theta=0.5, min_anchor_count=20):
+def disambiguate_NE(entity: str, theta=0.5, min_anchor_count=10):
     
     candidates = gen_NE_candidates(entity)
     
