@@ -13,6 +13,12 @@ Before start on this project, you need to make sure that you have these packages
 
 ## Download and preprocess data
 
+This part will generate three files
+* zhwiki-latest-redirect.tsv 
+* zhwiki-latest-bold.tsv
+* zhwiki-latest-anchor.tsv
+
+
 1. Download Wikipedia data
 ```shell
 wget https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-redirect.sql.gz
@@ -48,14 +54,14 @@ Go to **collect_data** directory, then execute
 ```
 python gen_bold.py
 ```
-It will generate file **zhwiki-latest-bold.tsv**.
+It will generate file **zhwiki-latest-bold.tsv** .
 
 5. Generate anchor data
 In **collect_data** directory, then execute, then execute
 ```
 python gen_anchor.py
 ```
-It will then generate file **zhwiki-latest-anchor.tsv**.
+It will then generate file **zhwiki-latest-anchor.tsv** .
 
 
 
