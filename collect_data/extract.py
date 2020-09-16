@@ -167,7 +167,7 @@ def extract_anchor_frequency(file):
 
 
 
-def output_page_id(page_ids, filepath="enwiki-pageid.tsv"):
+def output_page_id(page_ids, filepath="zhwiki-pageid.tsv"):
     
     with open(filepath, "w") as f:
         wikipages = list(page_ids.items())
